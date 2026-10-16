@@ -18,6 +18,7 @@ export default function MarketplacePage() {
   const [selectedSubject, setSelectedSubject] = useState("All Subjects");
   const [searchQuery, setSearchQuery] = useState("");
   const [modeFilter, setModeFilter] = useState("all");
+  const [providerTypeFilter, setProviderTypeFilter] = useState("all");
 
   const [selectedTutorForDetail, setSelectedTutorForDetail] = useState<Tutor | null>(null);
   const [tutorToHire, setTutorToHire] = useState<Tutor | null>(null);
@@ -45,6 +46,9 @@ export default function MarketplacePage() {
     })
       .filter(({ tutor, distance }) => {
         if (distance > radiusKm) return false;
+        if (providerTypeFilter !== "all" && tutor.providerType !== providerTypeFilter) {
+          return false;
+        }
         if (
           selectedCurriculum !== "All Curricula" &&
           !tutor.curricula.includes(selectedCurriculum as any)
@@ -81,8 +85,10 @@ export default function MarketplacePage() {
         return a.distance - b.distance;
       });
   }, [
+    tutorsList,
     userLocation,
     radiusKm,
+    providerTypeFilter,
     selectedCurriculum,
     selectedSubject,
     modeFilter,
@@ -142,12 +148,21 @@ export default function MarketplacePage() {
         setSearchQuery={setSearchQuery}
         modeFilter={modeFilter}
         setModeFilter={setModeFilter}
+        providerTypeFilter={providerTypeFilter}
+        setProviderTypeFilter={setProviderTypeFilter}
       />
 
       {/* Results Header */}
       <div className="flex items-center justify-between font-mono text-xs">
         <div>
-          <span className="font-bold text-ink-900">{rankedTutors.length} Tutors</span>
+          <span className="font-bold text-ink-900">
+            {rankedTutors.length}{" "}
+            {providerTypeFilter === "institute"
+              ? "Academies & Institutes"
+              : providerTypeFilter === "tutor"
+              ? "Independent Tutors"
+              : "Educators & Academies"}
+          </span>
           <span className="text-ink-500"> within {radiusKm} km of {userLocation.area}</span>
         </div>
         <div className="text-ink-400 text-[11px]">
@@ -172,20 +187,23 @@ export default function MarketplacePage() {
         <div className="bg-white rounded-lg border border-ink-200 p-12 text-center text-ink-500 font-mono text-xs space-y-2">
           <Compass className="w-8 h-8 text-ink-400 mx-auto" />
           <div className="font-bold text-ink-800">
-            No tutors found within {radiusKm} km of {userLocation.area}
+            No educators found within {radiusKm} km of {userLocation.area}
           </div>
           <p className="text-[11px]">
-            Expand your radius or clear subject filters to search broader areas in {userLocation.city}.
+            Expand your radius or clear filters to search broader areas in {userLocation.city}.
           </p>
           <button
             onClick={() => {
               setRadiusKm(25);
               setSelectedCurriculum("All Curricula");
               setSelectedSubject("All Subjects");
+              setModeFilter("all");
+              setProviderTypeFilter("all");
+              setSearchQuery("");
             }}
             className="mt-2 px-3 py-1.5 bg-ink-900 text-white rounded text-xs font-semibold hover:bg-black transition-colors"
           >
-            Reset Filters (25 km)
+            Reset All Filters (25 km)
           </button>
         </div>
       )}

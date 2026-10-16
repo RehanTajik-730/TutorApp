@@ -11,7 +11,14 @@ export type Curriculum =
   | "SAT / ACT"
   | "Junior School (Grade 1-8)";
 
-export type TeachingMode = "in_person" | "online" | "hybrid";
+export type TeachingMode = "home_visit" | "in_center" | "online" | "hybrid";
+
+export interface InstituteBranch {
+  name: string;
+  address: string;
+  phone?: string;
+  city: string;
+}
 
 export interface BundlePackage {
   id: string;
@@ -47,11 +54,12 @@ export interface TutorLocation {
 
 export interface Tutor {
   id: string;
+  providerType: "tutor" | "institute";
   name: string;
   tagline: string;
   bio: string;
   avatarUrl: string;
-  qualification: string; // e.g. "B.Sc Electrical Engineering (NUST), 6+ yrs teaching O/A Levels"
+  qualification: string; // e.g. "B.Sc Electrical Engineering (NUST)" or "Established 1989 • 8 Campuses"
   verifiedCnic: boolean;
   verifiedDegree: boolean;
   subjects: string[];
@@ -61,6 +69,11 @@ export interface Tutor {
   monthlyRatePKR: number;
   teachingModes: TeachingMode[];
   location: TutorLocation;
+  instituteBranches?: InstituteBranch[];
+  establishedYear?: number;
+  facultyCount?: number;
+  phone?: string;
+  website?: string;
   bundles: BundlePackage[];
   reviews: Review[];
   studentReviewsGiven: Review[]; // Reviews given by this tutor to students/parents

@@ -1,20 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { MOCK_TUTORS } from "@/data/mockTutors";
 
 export async function GET(req: NextRequest) {
   try {
-    const tutors = await prisma.tutor.findMany({
-      include: {
-        bundles: true,
-        reviews: true,
-      },
-      orderBy: {
-        rating: "desc",
-      },
-    });
+    let tutors: any[] = [];
+    try {
+      tutors = await prisma.tutor.findMany({
+        include: {
+          bundles: true,
+          reviews: true,
+        },
+        orderBy: {
+          rating: "desc",
+        },
+      });
+    } catch (e) {
+      console.warn("DB query failed, using mock tutors:", e);
+    }
+
+    if (!tutors || tutors.length === 0) {
+      return NextResponse.json({ success: true, tutors: MOCK_TUTORS });
+    }
 
     const parsedTutors = tutors.map((t) => ({
       id: t.id,
+      providerType: (t.providerType as "tutor" | "institute") || "tutor",
       name: t.name,
       tagline: t.tagline,
       bio: t.bio,
@@ -35,14 +46,19 @@ export async function GET(req: NextRequest) {
         lng: t.lng,
         maxTravelKm: t.maxTravelKm,
       },
-      bundles: t.bundles.map((b) => ({
+      instituteBranches: JSON.parse(t.instituteBranches || "[]"),
+      establishedYear: t.establishedYear ?? undefined,
+      facultyCount: t.facultyCount ?? undefined,
+      phone: t.phone ?? undefined,
+      website: t.website ?? undefined,
+      bundles: (t.bundles || []).map((b: any) => ({
         id: b.id,
         name: b.name,
         discountPercentage: b.discountPercentage,
         description: b.description,
         pricePerMonthPKR: b.pricePerMonthPKR,
       })),
-      reviews: t.reviews.map((r) => ({
+      reviews: (t.reviews || []).map((r: any) => ({
         id: r.id,
         authorType: r.authorType as "parent" | "tutor" | "student",
         authorName: r.authorName,

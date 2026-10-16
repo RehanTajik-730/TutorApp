@@ -50,6 +50,12 @@ async function main() {
         totalStudentsTaught: tut.totalStudentsTaught,
         syllabusCompletionRate: tut.syllabusCompletionRate,
         responseSpeed: tut.responseSpeed,
+        providerType: tut.providerType,
+        instituteBranches: JSON.stringify(tut.instituteBranches || []),
+        establishedYear: tut.establishedYear,
+        facultyCount: tut.facultyCount,
+        phone: tut.phone,
+        website: tut.website,
         bundles: {
           create: tut.bundles.map((b) => ({
             id: b.id,

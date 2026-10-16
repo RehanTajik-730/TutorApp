@@ -40,6 +40,12 @@ model Tutor {
   totalStudentsTaught    Int             @default(0)
   syllabusCompletionRate Int             @default(95)
   responseSpeed          String          @default("< 15 mins")
+  providerType           String          @default("tutor") // tutor | institute
+  instituteBranches      String?         // JSON array: [{ name, address, phone, city }]
+  establishedYear        Int?
+  facultyCount           Int?
+  phone                  String?
+  website                String?
   bundles                BundlePackage[]
   reviews                Review[]
   contracts              HireContract[]

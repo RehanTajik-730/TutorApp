@@ -17,6 +17,8 @@ interface SearchFiltersProps {
   setSearchQuery: (query: string) => void;
   modeFilter: string;
   setModeFilter: (mode: string) => void;
+  providerTypeFilter: string;
+  setProviderTypeFilter: (provider: string) => void;
 }
 
 export function SearchFilters({
@@ -32,6 +34,8 @@ export function SearchFilters({
   setSearchQuery,
   modeFilter,
   setModeFilter,
+  providerTypeFilter,
+  setProviderTypeFilter,
 }: SearchFiltersProps) {
   const curriculaList = [
     "All Curricula",
@@ -39,6 +43,7 @@ export function SearchFilters({
     "CAIE A Level",
     "Matric (Federal)",
     "Matric (Punjab)",
+    "Matric (Sindh)",
     "FSc Pre-Engineering",
     "FSc Pre-Medical",
     "MDCAT",
@@ -53,6 +58,8 @@ export function SearchFilters({
     "Physics",
     "Chemistry",
     "Biology",
+    "MDCAT Biology",
+    "ECAT Math",
     "Computer Science",
     "English Language",
     "Urdu",
@@ -60,6 +67,39 @@ export function SearchFilters({
 
   return (
     <div className="bg-white rounded-lg border border-ink-200 p-4 sm:p-5 shadow-2xs">
+      {/* Provider Type Filter Switcher */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 mb-3 border-b border-ink-100">
+        <div className="flex items-center gap-2">
+          <span className="font-mono font-bold uppercase tracking-wider text-ink-500 text-[10px]">
+            Provider Type:
+          </span>
+          <div className="inline-flex bg-ink-100 p-0.5 rounded border border-ink-200">
+            {[
+              { id: "all", label: "All Providers" },
+              { id: "tutor", label: "👤 Independent Tutors" },
+              { id: "institute", label: "🏫 Coaching Academies" },
+            ].map((p) => (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => setProviderTypeFilter(p.id)}
+                className={`px-3 py-1 text-xs font-mono font-medium rounded transition-all ${
+                  providerTypeFilter === p.id
+                    ? "bg-white text-ink-900 font-bold shadow-2xs border border-ink-200"
+                    : "text-ink-600 hover:text-ink-900"
+                }`}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="text-[11px] font-mono text-ink-500">
+          Karachi • Lahore • Islamabad / Rawalpindi
+        </div>
+      </div>
+
       {/* Primary search row */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
         {/* Keyword Search */}
@@ -174,14 +214,16 @@ export function SearchFilters({
           </label>
           <div className="flex bg-ink-100 p-0.5 rounded border border-ink-200">
             {[
-              { id: "all", label: "All" },
-              { id: "in_person", label: "In-Person" },
-              { id: "online", label: "Online" },
+              { id: "all", label: "All Modes" },
+              { id: "home_visit", label: "🏠 Home" },
+              { id: "in_center", label: "🏫 Academy" },
+              { id: "online", label: "💻 Online" },
             ].map((m) => (
               <button
                 key={m.id}
+                type="button"
                 onClick={() => setModeFilter(m.id)}
-                className={`flex-1 py-1 text-[11px] font-medium rounded transition-all ${
+                className={`flex-1 py-1 text-[11px] font-medium rounded transition-all text-center ${
                   modeFilter === m.id
                     ? "bg-white text-ink-900 font-bold shadow-2xs border border-ink-200"
                     : "text-ink-600 hover:text-ink-900"

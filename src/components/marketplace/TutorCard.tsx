@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { Star, MapPin, Check, ShieldCheck, ArrowUpRight } from "lucide-react";
 import { Tutor } from "@/types";
 import { formatPKR } from "@/lib/utils";
@@ -58,8 +59,37 @@ export function TutorCard({ tutor, distanceKm, onSelect, onHire }: TutorCardProp
           {tutor.tagline}
         </p>
 
+        {/* Teaching Modes & Institute Badges */}
+        <div className="mt-2.5 flex flex-wrap items-center gap-1.5 font-mono text-[10px]">
+          {tutor.providerType === "institute" ? (
+            <span className="bg-accent-blue-subtle text-accent-blue font-bold px-1.5 py-0.2 rounded border border-accent-blue-border">
+              🏫 Academy • {tutor.instituteBranches?.length || 1} Campuses
+            </span>
+          ) : (
+            <span className="bg-ink-100 text-ink-800 font-semibold px-1.5 py-0.2 rounded border border-ink-200">
+              👤 Independent Tutor
+            </span>
+          )}
+
+          {tutor.teachingModes.includes("home_visit") && (
+            <span className="text-ink-600 bg-ink-50 px-1 py-0.2 rounded border border-ink-200">
+              🏠 Home Visit
+            </span>
+          )}
+          {tutor.teachingModes.includes("in_center") && (
+            <span className="text-ink-600 bg-ink-50 px-1 py-0.2 rounded border border-ink-200">
+              🏫 In-Center
+            </span>
+          )}
+          {tutor.teachingModes.includes("online") && (
+            <span className="text-ink-600 bg-ink-50 px-1 py-0.2 rounded border border-ink-200">
+              💻 Online
+            </span>
+          )}
+        </div>
+
         {/* Badges / Metrics row */}
-        <div className="mt-3.5 pt-3 border-t border-ink-100 flex items-center justify-between text-[11px] font-mono">
+        <div className="mt-3 pt-2.5 border-t border-ink-100 flex items-center justify-between text-[11px] font-mono">
           <div className="flex items-center gap-1.5 text-ink-600">
             <span className="w-1.5 h-1.5 rounded-full bg-accent-blue" />
             <span>{tutor.syllabusCompletionRate}% syllabus completion</span>
@@ -73,7 +103,7 @@ export function TutorCard({ tutor, distanceKm, onSelect, onHire }: TutorCardProp
         </div>
 
         {/* Subjects list */}
-        <div className="mt-3 flex flex-wrap gap-1">
+        <div className="mt-2.5 flex flex-wrap gap-1">
           {tutor.subjects.slice(0, 3).map((subj) => (
             <span
               key={subj}
@@ -118,12 +148,12 @@ export function TutorCard({ tutor, distanceKm, onSelect, onHire }: TutorCardProp
         </div>
 
         <div className="flex items-center gap-1.5">
-          <button
-            onClick={() => onSelect(tutor)}
-            className="px-2.5 py-1.5 text-xs font-medium text-ink-800 bg-white border border-ink-200 hover:border-ink-400 rounded transition-colors"
+          <Link
+            href={`/tutors/${tutor.id}`}
+            className="px-2.5 py-1.5 text-xs font-medium text-ink-800 bg-white border border-ink-200 hover:border-ink-400 rounded transition-colors inline-block"
           >
             Profile
-          </button>
+          </Link>
           <button
             onClick={() => onHire(tutor)}
             className="px-3 py-1.5 text-xs font-semibold text-white bg-ink-900 hover:bg-black rounded transition-colors flex items-center gap-1"
