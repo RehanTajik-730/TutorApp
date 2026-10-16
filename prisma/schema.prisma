@@ -1,0 +1,181 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String?  @unique
+  phone     String?
+  role      String   @default("CLIENT") // CLIENT | TUTOR | ADMIN
+  createdAt DateTime @default(now())
+}
+
+model Tutor {
+  id                     String          @id @default(uuid())
+  name                   String
+  tagline                String
+  bio                    String
+  avatarUrl              String
+  qualification          String
+  verifiedCnic          Boolean         @default(false)
+  verifiedDegree        Boolean         @default(false)
+  subjects               String          // JSON array string: ["Physics", "Mathematics"]
+  curricula              String          // JSON array string: ["CAIE O Level", "CAIE A Level"]
+  grades                 String          // JSON array string
+  hourlyRatePKR          Int
+  monthlyRatePKR         Int
+  teachingModes          String          // JSON array string: ["in_person", "online"]
+  city                   String
+  area                   String
+  lat                    Float
+  lng                    Float
+  maxTravelKm            Float           @default(5.0)
+  rating                 Float           @default(5.0)
+  totalStudentsTaught    Int             @default(0)
+  syllabusCompletionRate Int             @default(95)
+  responseSpeed          String          @default("< 15 mins")
+  bundles                BundlePackage[]
+  reviews                Review[]
+  contracts              HireContract[]
+  createdAt              DateTime        @default(now())
+}
+
+model BundlePackage {
+  id                 String @id @default(uuid())
+  tutorId            String
+  tutor              Tutor  @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  name               String
+  discountPercentage Int
+  description        String
+  pricePerMonthPKR   Int
+}
+
+model Review {
+  id            String   @id @default(uuid())
+  tutorId       String
+  tutor         Tutor    @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  authorType    String   // parent | student | tutor
+  authorName    String
+  rating        Int
+  comment       String
+  date          String
+  verifiedHire  Boolean  @default(true)
+  clarity       Int?
+  punctuality   Int?
+  behavior      Int?
+  attentiveness Int?
+  createdAt     DateTime @default(now())
+}
+
+model HireContract {
+  id               String   @id @default(uuid())
+  tutorId          String
+  tutor            Tutor    @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  studentName      String
+  clientContact    String?
+  packageName      String
+  pricePerMonthPKR Int
+  scheduleDays     String   // JSON array: ["Mon", "Wed", "Fri"]
+  status           String   @default("ACTIVE") // ACTIVE | PENDING | COMPLETED
+  createdAt        DateTime @default(now())
+}
+
+model SyllabusRoadmap {
+  id              String          @id @default(uuid())
+  studentName     String
+  tutorName       String
+  subject         String
+  curriculum      String
+  targetExamDate  String
+  totalTopics     Int             @default(0)
+  completedTopics Int             @default(0)
+  topics          SyllabusTopic[]
+  createdAt       DateTime        @default(now())
+}
+
+model SyllabusTopic {
+  id               String          @id @default(uuid())
+  roadmapId        String
+  roadmap          SyllabusRoadmap @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  chapterNumber    Int
+  chapterName      String
+  topicName        String
+  estimatedHours   Float           @default(2.0)
+  status           String          @default("upcoming") // upcoming | in_progress | completed
+  completedDate    String?
+  tutorNotes       String?
+  homeworkAssigned String?
+  createdAt        DateTime        @default(now())
+}
+
+model Quiz {
+  id               String          @id @default(uuid())
+  title            String
+  subject          String
+  curriculum       String
+  topic            String
+  timeLimitMinutes Int             @default(10)
+  generatedFrom    String          @default("lecture_notes")
+  questions        QuizQuestion[]
+  attempts         QuizAttempt[]
+  createdAt        DateTime        @default(now())
+}
+
+model QuizQuestion {
+  id                 String   @id @default(uuid())
+  quizId             String
+  quiz               Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  question           String
+  options            String   // JSON array string: ["Option A", "Option B", ...]
+  correctAnswerIndex Int
+  explanation        String
+  topicTag           String
+}
+
+model QuizAttempt {
+  id               String   @id @default(uuid())
+  quizId           String
+  quiz             Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  studentName      String
+  score            Int
+  total            Int
+  percentage       Int
+  date             String
+  timeSpentSeconds Int      @default(0)
+  createdAt        DateTime @default(now())
+}
+
+model AcademicScoreLog {
+  id                     String   @id @default(uuid())
+  studentName            String
+  date                   String
+  assessmentType         String   // in_app_ai_quiz | tutor_mock | school_term_exam
+  title                  String
+  subject                String
+  scorePercentage        Int
+  classAveragePercentage Int?
+  topicsTested           String   // JSON array string
+  createdAt              DateTime @default(now())
+}
+
+model PastPaper {
+  id                String   @id @default(uuid())
+  country           String   // pakistan | usa | uk
+  category          String
+  subCategory       String?
+  subject           String
+  year              Int
+  session           String
+  paperCode         String
+  hasMarkScheme     Boolean  @default(true)
+  hasExaminerReport Boolean  @default(false)
+  fileSizeMb        Float
+  downloadUrl       String
+  createdAt         DateTime @default(now())
+}
