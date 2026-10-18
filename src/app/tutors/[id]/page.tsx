@@ -87,11 +87,13 @@ export default function TutorProfilePage() {
       {/* Main Profile Header Card */}
       <div className="bg-white rounded-lg border border-ink-200 p-6 shadow-2xs">
         <div className="flex flex-col sm:flex-row items-start gap-5">
-          <img
-            src={tutor.avatarUrl}
-            alt={tutor.name}
-            className="w-20 h-20 rounded-md object-cover border border-ink-200 shrink-0"
-          />
+          <div className="w-24 h-32 shrink-0 overflow-hidden rounded-md border border-ink-200 bg-ink-100 relative shadow-2xs">
+            <img
+              src={tutor.avatarUrl}
+              alt={tutor.name}
+              className="w-full h-full object-cover object-top"
+            />
+          </div>
 
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-1.5">
@@ -145,7 +147,7 @@ export default function TutorProfilePage() {
             <div className="text-right sm:text-right mb-2 font-mono">
               <div className="text-[10px] text-ink-400 uppercase">Monthly Tuition</div>
               <div className="text-lg font-bold text-ink-900">{formatPKR(tutor.monthlyRatePKR)}/mo</div>
-              <div className="text-[10px] text-ink-500">{formatPKR(tutor.hourlyRatePKR)}/hr session</div>
+              <div className="text-[10px] text-ink-500">Per Subject Batch</div>
             </div>
             <button
               onClick={() => setIsHireOpen(true)}
