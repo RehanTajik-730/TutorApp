@@ -17,8 +17,8 @@ interface SearchFiltersProps {
   setSearchQuery: (query: string) => void;
   modeFilter: string;
   setModeFilter: (mode: string) => void;
-  providerTypeFilter: string;
-  setProviderTypeFilter: (provider: string) => void;
+  selectedInstitute: string;
+  setSelectedInstitute: (institute: string) => void;
 }
 
 export function SearchFilters({
@@ -34,8 +34,8 @@ export function SearchFilters({
   setSearchQuery,
   modeFilter,
   setModeFilter,
-  providerTypeFilter,
-  setProviderTypeFilter,
+  selectedInstitute,
+  setSelectedInstitute,
 }: SearchFiltersProps) {
   const curriculaList = [
     "All Curricula",
@@ -54,37 +54,41 @@ export function SearchFilters({
 
   const subjectsList = [
     "All Subjects",
+    "Islamiyat",
     "Mathematics",
+    "Additional Mathematics",
     "Physics",
     "Chemistry",
     "Biology",
-    "MDCAT Biology",
-    "ECAT Math",
     "Computer Science",
+    "Pakistan Studies",
     "English Language",
     "Urdu",
   ];
 
   return (
     <div className="bg-white rounded-lg border border-ink-200 p-4 sm:p-5 shadow-2xs">
-      {/* Provider Type Filter Switcher */}
+      {/* Institute Filter Switcher */}
       <div className="flex flex-wrap items-center justify-between gap-3 pb-3 mb-3 border-b border-ink-100">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="font-mono font-bold uppercase tracking-wider text-ink-500 text-[10px]">
-            Provider Type:
+            Faculty / Institute:
           </span>
-          <div className="inline-flex bg-ink-100 p-0.5 rounded border border-ink-200">
+          <div className="inline-flex flex-wrap bg-ink-100 p-0.5 rounded border border-ink-200 gap-0.5">
             {[
-              { id: "all", label: "All Providers" },
-              { id: "tutor", label: "👤 Independent Tutors" },
-              { id: "institute", label: "🏫 Coaching Academies" },
+              { id: "all", label: "All Tutors" },
+              { id: "SKH Solutions", label: "🏫 SKH Solutions (Karachi)" },
+              { id: "Anees Hussain", label: "🏫 Anees Hussain" },
+              { id: "KIPS Preparations", label: "🏫 KIPS" },
+              { id: "GreenHall Academy", label: "🏫 GreenHall" },
+              { id: "Independent", label: "👤 Independent" },
             ].map((p) => (
               <button
                 key={p.id}
                 type="button"
-                onClick={() => setProviderTypeFilter(p.id)}
-                className={`px-3 py-1 text-xs font-mono font-medium rounded transition-all ${
-                  providerTypeFilter === p.id
+                onClick={() => setSelectedInstitute(p.id)}
+                className={`px-2.5 py-1 text-xs font-mono font-medium rounded transition-all ${
+                  selectedInstitute === p.id
                     ? "bg-white text-ink-900 font-bold shadow-2xs border border-ink-200"
                     : "text-ink-600 hover:text-ink-900"
                 }`}
@@ -105,13 +109,13 @@ export function SearchFilters({
         {/* Keyword Search */}
         <div className="md:col-span-5">
           <label className="block text-[11px] font-mono uppercase font-bold text-ink-500 mb-1 tracking-wider">
-            Search Tutor / Institution
+            Search Tutor / Subject
           </label>
           <div className="relative">
             <Search className="w-3.5 h-3.5 text-ink-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="e.g. NUST, Dow, Physics, Calculus..."
+              placeholder="e.g. Sir Khurram, Islamiyat, Math, Physics, Panwala..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-8 pr-3 py-2 text-xs bg-ink-50 border border-ink-200 rounded focus:outline-none focus:border-ink-900 focus:bg-white text-ink-900 placeholder:text-ink-400"

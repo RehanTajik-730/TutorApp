@@ -32,7 +32,7 @@ export default function TutorProfilePage() {
   const [tutor, setTutor] = useState<Tutor | null>(null);
   const [loading, setLoading] = useState(true);
   const [isHireOpen, setIsHireOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<"overview" | "branches" | "bundles" | "reviews">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "curriculum" | "bundles" | "reviews">("overview");
 
   useEffect(() => {
     if (!id) return;
@@ -50,7 +50,7 @@ export default function TutorProfilePage() {
   if (loading) {
     return (
       <div className="max-w-5xl mx-auto py-12 text-center font-mono text-xs text-ink-500">
-        Loading verified provider profile...
+        Loading verified faculty profile...
       </div>
     );
   }
@@ -58,7 +58,7 @@ export default function TutorProfilePage() {
   if (!tutor) {
     return (
       <div className="max-w-5xl mx-auto py-12 text-center font-mono text-xs text-ink-500 space-y-3">
-        <p>Provider profile not found.</p>
+        <p>Tutor profile not found.</p>
         <Link
           href="/"
           className="inline-block px-3 py-1.5 bg-ink-900 text-white rounded text-xs font-semibold"
@@ -69,7 +69,7 @@ export default function TutorProfilePage() {
     );
   }
 
-  const isInstitute = tutor.providerType === "institute";
+  const hasInstitute = tutor.instituteName && tutor.instituteName !== "Independent";
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -80,7 +80,7 @@ export default function TutorProfilePage() {
           className="inline-flex items-center gap-1.5 text-xs font-mono text-ink-600 hover:text-ink-900 transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          Back to Tutors & Academies Directory
+          Back to Faculty & Tutors Directory
         </Link>
       </div>
 
@@ -97,23 +97,17 @@ export default function TutorProfilePage() {
             <div className="flex flex-wrap items-center gap-2 mb-1.5">
               <span
                 className={`font-mono text-[10px] uppercase font-bold px-2 py-0.5 rounded border ${
-                  isInstitute
+                  hasInstitute
                     ? "bg-accent-blue-subtle text-accent-blue border-accent-blue-border"
                     : "bg-ink-100 text-ink-900 border-ink-200"
                 }`}
               >
-                {isInstitute ? "Coaching Academy / Institute" : "Independent Senior Tutor"}
+                {hasInstitute ? `🏫 Faculty at ${tutor.instituteName}` : "👤 Independent Senior Educator"}
               </span>
 
               {tutor.verifiedCnic && (
                 <span className="font-mono text-[10px] text-ink-700 bg-ink-50 px-2 py-0.5 rounded border border-ink-200 flex items-center gap-1 font-semibold">
-                  <Check className="w-3 h-3 text-accent-blue" /> Verified Entity
-                </span>
-              )}
-
-              {tutor.establishedYear && (
-                <span className="font-mono text-[10px] text-ink-500">
-                  Est. {tutor.establishedYear}
+                  <Check className="w-3 h-3 text-accent-blue" /> Verified Credentials
                 </span>
               )}
             </div>
@@ -122,7 +116,11 @@ export default function TutorProfilePage() {
               {tutor.name}
             </h1>
 
-            <p className="text-xs text-ink-600 mt-1 leading-relaxed">{tutor.tagline}</p>
+            <p className="text-xs font-mono text-accent-blue font-semibold mt-0.5">
+              {tutor.qualification}
+            </p>
+
+            <p className="text-xs text-ink-600 mt-2 leading-relaxed">{tutor.tagline}</p>
 
             <div className="flex flex-wrap items-center gap-4 mt-3 text-xs font-mono text-ink-500">
               <span className="flex items-center gap-1 text-ink-700">
@@ -137,7 +135,7 @@ export default function TutorProfilePage() {
               <span>{tutor.totalStudentsTaught}+ students coached</span>
 
               <span className="text-ink-700 font-semibold">
-                {tutor.syllabusCompletionRate}% on-time syllabus rate
+                {tutor.syllabusCompletionRate}% syllabus completion
               </span>
             </div>
           </div>
@@ -145,14 +143,15 @@ export default function TutorProfilePage() {
           {/* Quick CTA */}
           <div className="sm:self-center shrink-0 w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-ink-100">
             <div className="text-right sm:text-right mb-2 font-mono">
-              <div className="text-[10px] text-ink-400 uppercase">Starting From</div>
+              <div className="text-[10px] text-ink-400 uppercase">Monthly Tuition</div>
               <div className="text-lg font-bold text-ink-900">{formatPKR(tutor.monthlyRatePKR)}/mo</div>
+              <div className="text-[10px] text-ink-500">{formatPKR(tutor.hourlyRatePKR)}/hr session</div>
             </div>
             <button
               onClick={() => setIsHireOpen(true)}
               className="w-full sm:w-auto px-5 py-2 text-xs font-bold font-mono text-white bg-ink-900 hover:bg-black rounded flex items-center justify-center gap-1.5 transition-colors"
             >
-              Enroll / Book Session
+              Hire & Start Roadmap
               <ArrowUpRight className="w-3.5 h-3.5 text-accent-blue" />
             </button>
           </div>
@@ -164,7 +163,7 @@ export default function TutorProfilePage() {
             {tutor.phone && (
               <span className="flex items-center gap-1.5">
                 <Phone className="w-3.5 h-3.5 text-ink-400" />
-                Direct Helpline: <strong>{tutor.phone}</strong>
+                Inquiries / WhatsApp: <strong>{tutor.phone}</strong>
               </span>
             )}
             {tutor.website && (
@@ -175,7 +174,7 @@ export default function TutorProfilePage() {
                 className="flex items-center gap-1.5 text-accent-blue hover:underline"
               >
                 <Globe className="w-3.5 h-3.5" />
-                Official Portal
+                Institute Portal ({tutor.instituteName})
               </a>
             )}
           </div>
@@ -185,7 +184,7 @@ export default function TutorProfilePage() {
       {/* Teaching Modes Offered */}
       <div className="bg-white rounded-lg border border-ink-200 p-5 shadow-2xs">
         <h2 className="font-mono uppercase font-bold text-[10px] text-ink-400 tracking-wider mb-3">
-          Available Instruction Modes
+          Instruction Modes Offered
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs">
           <div
@@ -198,7 +197,7 @@ export default function TutorProfilePage() {
             <div className="text-base mb-1">🏠</div>
             <div>Home Visit Tutoring</div>
             <span className="text-[10px] font-normal text-ink-500 block">
-              {tutor.teachingModes.includes("home_visit") ? "Available in area" : "Not offered"}
+              {tutor.teachingModes.includes("home_visit") ? "Available in locality" : "Not offered"}
             </span>
           </div>
 
@@ -210,9 +209,9 @@ export default function TutorProfilePage() {
             }`}
           >
             <div className="text-base mb-1">🏫</div>
-            <div>Academy Campus</div>
+            <div>In-Center / Academy</div>
             <span className="text-[10px] font-normal text-ink-500 block">
-              {tutor.teachingModes.includes("in_center") ? "Physical classes" : "Not offered"}
+              {tutor.teachingModes.includes("in_center") ? `${tutor.instituteName} Campus` : "Not offered"}
             </span>
           </div>
 
@@ -249,10 +248,8 @@ export default function TutorProfilePage() {
       {/* Tabs Bar */}
       <div className="flex border-b border-ink-200 font-mono text-xs">
         {[
-          { id: "overview", label: "Overview & Methodology" },
-          ...(isInstitute && tutor.instituteBranches && tutor.instituteBranches.length > 0
-            ? [{ id: "branches", label: `Campus Branches (${tutor.instituteBranches.length})` }]
-            : []),
+          { id: "overview", label: "Overview & Bio" },
+          { id: "curriculum", label: "Curricula & Subjects" },
           { id: "bundles", label: `Fee Packages (${tutor.bundles.length})` },
           { id: "reviews", label: `Verified Reviews (${tutor.reviews.length})` },
         ].map((tab) => (
@@ -281,69 +278,67 @@ export default function TutorProfilePage() {
               {tutor.bio}
             </p>
 
-            {/* Curricula & Subjects */}
-            <div className="pt-4 border-t border-ink-100">
-              <h4 className="font-mono uppercase font-bold text-[10px] text-ink-400 tracking-wider mb-2">
-                Curricula & Exam Boards Prepared
-              </h4>
-              <div className="flex flex-wrap gap-1.5">
-                {tutor.curricula.map((curr) => (
-                  <span
-                    key={curr}
-                    className="font-mono text-[11px] font-bold bg-accent-blue-subtle text-accent-blue border border-accent-blue-border px-2 py-0.5 rounded"
-                  >
-                    {curr}
-                  </span>
-                ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-ink-100 font-mono text-xs">
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase font-bold text-ink-400">Institutional Affiliation</span>
+                <p className="text-ink-900 font-bold">{tutor.instituteName}</p>
               </div>
-            </div>
-
-            <div className="pt-4 border-t border-ink-100">
-              <h4 className="font-mono uppercase font-bold text-[10px] text-ink-400 tracking-wider mb-2">
-                Subjects Coached
-              </h4>
-              <div className="flex flex-wrap gap-1.5">
-                {tutor.subjects.map((subj) => (
-                  <span
-                    key={subj}
-                    className="font-mono text-[11px] bg-ink-100 text-ink-800 border border-ink-200 px-2 py-0.5 rounded"
-                  >
-                    {subj}
-                  </span>
-                ))}
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase font-bold text-ink-400">Response Speed</span>
+                <p className="text-ink-900 font-bold">{tutor.responseSpeed}</p>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Tab 2: Branches (for Institutes) */}
-      {activeTab === "branches" && isInstitute && tutor.instituteBranches && (
-        <div className="space-y-3">
-          <div className="bg-white rounded-lg border border-ink-200 p-5">
-            <h3 className="font-mono uppercase font-bold text-[10px] text-ink-400 tracking-wider mb-3">
-              Official City Branches & Campuses
-            </h3>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {tutor.instituteBranches.map((branch, i) => (
-                <div
-                  key={i}
-                  className="p-3.5 rounded border border-ink-200 bg-ink-50 space-y-1 font-mono text-xs"
+      {/* Tab 2: Curriculum & Subjects */}
+      {activeTab === "curriculum" && (
+        <div className="bg-white rounded-lg border border-ink-200 p-5 space-y-5">
+          <div>
+            <h4 className="font-mono uppercase font-bold text-[10px] text-ink-400 tracking-wider mb-2">
+              Curricula & Exam Boards
+            </h4>
+            <div className="flex flex-wrap gap-1.5">
+              {tutor.curricula.map((curr) => (
+                <span
+                  key={curr}
+                  className="font-mono text-[11px] font-bold bg-accent-blue-subtle text-accent-blue border border-accent-blue-border px-2.5 py-1 rounded"
                 >
-                  <div className="font-bold text-ink-900 flex items-center justify-between">
-                    <span>{branch.name}</span>
-                    <span className="text-[10px] text-accent-blue bg-white px-1.5 py-0.2 rounded border border-ink-200">
-                      {branch.city}
-                    </span>
-                  </div>
-                  <p className="text-ink-600 font-sans text-xs">{branch.address}</p>
-                  {branch.phone && (
-                    <div className="text-ink-500 text-[11px] pt-1">
-                      Direct: <strong className="text-ink-800">{branch.phone}</strong>
-                    </div>
-                  )}
-                </div>
+                  {curr}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-ink-100">
+            <h4 className="font-mono uppercase font-bold text-[10px] text-ink-400 tracking-wider mb-2">
+              Subjects Taught
+            </h4>
+            <div className="flex flex-wrap gap-1.5">
+              {tutor.subjects.map((subj) => (
+                <span
+                  key={subj}
+                  className="font-mono text-[11px] bg-ink-100 text-ink-800 border border-ink-200 px-2.5 py-1 rounded font-semibold"
+                >
+                  {subj}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-ink-100">
+            <h4 className="font-mono uppercase font-bold text-[10px] text-ink-400 tracking-wider mb-2">
+              Eligible Student Grades
+            </h4>
+            <div className="flex flex-wrap gap-1.5">
+              {tutor.grades.map((gr) => (
+                <span
+                  key={gr}
+                  className="font-mono text-[10px] bg-ink-50 text-ink-600 border border-ink-200 px-2 py-0.5 rounded"
+                >
+                  {gr}
+                </span>
               ))}
             </div>
           </div>
@@ -359,7 +354,7 @@ export default function TutorProfilePage() {
                 Transparent Fee Packages & Sibling Discounts
               </h3>
               <span className="font-mono text-[11px] text-accent-red font-bold">
-                Predefined Savings
+                Guaranteed Predefined Savings
               </span>
             </div>
 
@@ -389,7 +384,7 @@ export default function TutorProfilePage() {
                       onClick={() => setIsHireOpen(true)}
                       className="px-3 py-1 bg-ink-900 hover:bg-black text-white text-xs font-mono font-bold rounded"
                     >
-                      Select Bundle
+                      Select Package
                     </button>
                   </div>
                 </div>

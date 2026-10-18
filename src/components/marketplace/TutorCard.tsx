@@ -61,13 +61,13 @@ export function TutorCard({ tutor, distanceKm, onSelect, onHire }: TutorCardProp
 
         {/* Teaching Modes & Institute Badges */}
         <div className="mt-2.5 flex flex-wrap items-center gap-1.5 font-mono text-[10px]">
-          {tutor.providerType === "institute" ? (
+          {tutor.instituteName && tutor.instituteName !== "Independent" ? (
             <span className="bg-accent-blue-subtle text-accent-blue font-bold px-1.5 py-0.2 rounded border border-accent-blue-border">
-              🏫 Academy • {tutor.instituteBranches?.length || 1} Campuses
+              🏫 {tutor.instituteName}
             </span>
           ) : (
             <span className="bg-ink-100 text-ink-800 font-semibold px-1.5 py-0.2 rounded border border-ink-200">
-              👤 Independent Tutor
+              👤 Independent Educator
             </span>
           )}
 

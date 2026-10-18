@@ -50,10 +50,7 @@ async function main() {
         totalStudentsTaught: tut.totalStudentsTaught,
         syllabusCompletionRate: tut.syllabusCompletionRate,
         responseSpeed: tut.responseSpeed,
-        providerType: tut.providerType,
-        instituteBranches: JSON.stringify(tut.instituteBranches || []),
-        establishedYear: tut.establishedYear,
-        facultyCount: tut.facultyCount,
+        instituteName: tut.instituteName || "Independent",
         phone: tut.phone,
         website: tut.website,
         bundles: {

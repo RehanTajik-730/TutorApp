@@ -18,7 +18,7 @@ export default function MarketplacePage() {
   const [selectedSubject, setSelectedSubject] = useState("All Subjects");
   const [searchQuery, setSearchQuery] = useState("");
   const [modeFilter, setModeFilter] = useState("all");
-  const [providerTypeFilter, setProviderTypeFilter] = useState("all");
+  const [selectedInstitute, setSelectedInstitute] = useState("all");
 
   const [selectedTutorForDetail, setSelectedTutorForDetail] = useState<Tutor | null>(null);
   const [tutorToHire, setTutorToHire] = useState<Tutor | null>(null);
@@ -46,7 +46,7 @@ export default function MarketplacePage() {
     })
       .filter(({ tutor, distance }) => {
         if (distance > radiusKm) return false;
-        if (providerTypeFilter !== "all" && tutor.providerType !== providerTypeFilter) {
+        if (selectedInstitute !== "all" && tutor.instituteName !== selectedInstitute) {
           return false;
         }
         if (
@@ -69,10 +69,11 @@ export default function MarketplacePage() {
         if (searchQuery.trim()) {
           const q = searchQuery.toLowerCase();
           const matchName = tutor.name.toLowerCase().includes(q);
+          const matchInstitute = (tutor.instituteName || "").toLowerCase().includes(q);
           const matchQual = tutor.qualification.toLowerCase().includes(q);
           const matchSubj = tutor.subjects.some((s) => s.toLowerCase().includes(q));
           const matchBio = tutor.bio.toLowerCase().includes(q);
-          if (!matchName && !matchQual && !matchSubj && !matchBio) {
+          if (!matchName && !matchInstitute && !matchQual && !matchSubj && !matchBio) {
             return false;
           }
         }
@@ -88,7 +89,7 @@ export default function MarketplacePage() {
     tutorsList,
     userLocation,
     radiusKm,
-    providerTypeFilter,
+    selectedInstitute,
     selectedCurriculum,
     selectedSubject,
     modeFilter,
@@ -148,8 +149,8 @@ export default function MarketplacePage() {
         setSearchQuery={setSearchQuery}
         modeFilter={modeFilter}
         setModeFilter={setModeFilter}
-        providerTypeFilter={providerTypeFilter}
-        setProviderTypeFilter={setProviderTypeFilter}
+        selectedInstitute={selectedInstitute}
+        setSelectedInstitute={setSelectedInstitute}
       />
 
       {/* Results Header */}
@@ -157,11 +158,9 @@ export default function MarketplacePage() {
         <div>
           <span className="font-bold text-ink-900">
             {rankedTutors.length}{" "}
-            {providerTypeFilter === "institute"
-              ? "Academies & Institutes"
-              : providerTypeFilter === "tutor"
-              ? "Independent Tutors"
-              : "Educators & Academies"}
+            {selectedInstitute !== "all"
+              ? `Educators from ${selectedInstitute}`
+              : "Verified Educators & Faculty"}
           </span>
           <span className="text-ink-500"> within {radiusKm} km of {userLocation.area}</span>
         </div>
@@ -198,7 +197,7 @@ export default function MarketplacePage() {
               setSelectedCurriculum("All Curricula");
               setSelectedSubject("All Subjects");
               setModeFilter("all");
-              setProviderTypeFilter("all");
+              setSelectedInstitute("all");
               setSearchQuery("");
             }}
             className="mt-2 px-3 py-1.5 bg-ink-900 text-white rounded text-xs font-semibold hover:bg-black transition-colors"

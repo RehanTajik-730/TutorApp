@@ -32,8 +32,8 @@ export async function GET(
 
     const tutor = {
       id: t.id,
-      providerType: (t.providerType as "tutor" | "institute") || "tutor",
       name: t.name,
+      instituteName: t.instituteName || "Independent",
       tagline: t.tagline,
       bio: t.bio,
       avatarUrl: t.avatarUrl,
@@ -53,9 +53,6 @@ export async function GET(
         lng: t.lng,
         maxTravelKm: t.maxTravelKm,
       },
-      instituteBranches: JSON.parse(t.instituteBranches || "[]"),
-      establishedYear: t.establishedYear ?? undefined,
-      facultyCount: t.facultyCount ?? undefined,
       phone: t.phone ?? undefined,
       website: t.website ?? undefined,
       bundles: (t.bundles || []).map((b: any) => ({

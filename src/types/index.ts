@@ -54,12 +54,12 @@ export interface TutorLocation {
 
 export interface Tutor {
   id: string;
-  providerType: "tutor" | "institute";
   name: string;
+  instituteName: string; // e.g. "SKH Solutions", "Anees Hussain", "GreenHall Academy", "KIPS Preparations", "Independent"
   tagline: string;
   bio: string;
   avatarUrl: string;
-  qualification: string; // e.g. "B.Sc Electrical Engineering (NUST)" or "Established 1989 • 8 Campuses"
+  qualification: string; // e.g. "M.A Islamic Studies (Karachi Univ) • 15+ Yrs Exp"
   verifiedCnic: boolean;
   verifiedDegree: boolean;
   subjects: string[];
@@ -69,9 +69,6 @@ export interface Tutor {
   monthlyRatePKR: number;
   teachingModes: TeachingMode[];
   location: TutorLocation;
-  instituteBranches?: InstituteBranch[];
-  establishedYear?: number;
-  facultyCount?: number;
   phone?: string;
   website?: string;
   bundles: BundlePackage[];
