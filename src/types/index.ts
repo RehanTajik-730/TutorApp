@@ -81,6 +81,22 @@ export interface Tutor {
 }
 
 // Syllabus Tracker Types
+export type AttachmentType = "note" | "homework" | "assignment";
+
+export interface TopicAttachment {
+  id: string;
+  type: AttachmentType;
+  title: string;
+  description?: string;
+  fileName: string;
+  fileSize?: string;
+  fileUrl?: string;
+  dueDate?: string;
+  maxMarks?: number;
+  downloadContent?: string;
+  createdAt: string;
+}
+
 export interface SyllabusTopic {
   id: string;
   chapterNumber: number;
@@ -91,17 +107,23 @@ export interface SyllabusTopic {
   completedDate?: string;
   tutorNotes?: string;
   homeworkAssigned?: string;
+  attachments?: TopicAttachment[];
 }
 
 export interface SyllabusRoadmap {
   id: string;
-  studentName: string;
+  tutorId?: string;
   tutorName: string;
+  instituteName?: string;
+  courseTitle: string;
   subject: string;
   curriculum: Curriculum;
+  batchSchedule?: string;
   targetExamDate: string;
   totalTopics: number;
   completedTopics: number;
+  enrolledStudents: string[];
+  studentName?: string;
   topics: SyllabusTopic[];
 }
 

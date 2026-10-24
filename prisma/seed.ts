@@ -86,8 +86,13 @@ async function main() {
     await prisma.syllabusRoadmap.create({
       data: {
         id: rm.id,
-        studentName: rm.studentName,
+        tutorId: rm.tutorId,
         tutorName: rm.tutorName,
+        instituteName: rm.instituteName || "Independent",
+        courseTitle: rm.courseTitle || rm.subject,
+        batchSchedule: rm.batchSchedule,
+        studentName: rm.studentName || "Enrolled Batch",
+        enrolledStudents: JSON.stringify(rm.enrolledStudents || []),
         subject: rm.subject,
         curriculum: rm.curriculum,
         targetExamDate: rm.targetExamDate,
@@ -104,11 +109,12 @@ async function main() {
             completedDate: t.completedDate,
             tutorNotes: t.tutorNotes,
             homeworkAssigned: t.homeworkAssigned,
+            attachments: t.attachments ? JSON.stringify(t.attachments) : null,
           })),
         },
       },
     });
-    console.log(`Seeded roadmap for student: ${rm.studentName}`);
+    console.log(`Seeded roadmap for course: ${rm.courseTitle}`);
   }
 
   // 4. Seed Quizzes & Questions

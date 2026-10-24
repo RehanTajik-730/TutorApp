@@ -90,16 +90,21 @@ model HireContract {
 }
 
 model SyllabusRoadmap {
-  id              String          @id @default(uuid())
-  studentName     String
-  tutorName       String
-  subject         String
-  curriculum      String
-  targetExamDate  String
-  totalTopics     Int             @default(0)
-  completedTopics Int             @default(0)
-  topics          SyllabusTopic[]
-  createdAt       DateTime        @default(now())
+  id               String          @id @default(uuid())
+  studentName      String?         @default("Enrolled Batch")
+  tutorId          String?
+  tutorName        String
+  instituteName    String?         @default("Independent")
+  courseTitle      String?         @default("Course Syllabus")
+  batchSchedule    String?
+  subject          String
+  curriculum       String
+  targetExamDate   String
+  totalTopics      Int             @default(0)
+  completedTopics  Int             @default(0)
+  enrolledStudents String?         // JSON array string: ["Student 1", "Student 2"]
+  topics           SyllabusTopic[]
+  createdAt        DateTime        @default(now())
 }
 
 model SyllabusTopic {
@@ -114,6 +119,7 @@ model SyllabusTopic {
   completedDate    String?
   tutorNotes       String?
   homeworkAssigned String?
+  attachments      String?         // JSON array string: TopicAttachment[]
   createdAt        DateTime        @default(now())
 }
 
